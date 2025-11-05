@@ -1,0 +1,356 @@
+openapi: 3.0.0
+info:
+  title: Easyappz Classifieds API
+  version: 1.0.0
+  description: |
+    Простое API доски объявлений. Аутентификация через JWT в заголовке Authorization: Bearer <token>.
+servers:
+  - url: /
+paths:
+  /api/auth/register/:
+    post:
+      summary: Регистрация пользователя
+      description: Создает пользователя и профиль, возвращает JWT токены.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name:
+                  type: string
+                  example: Иван
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  example: secret123
+                phone:
+                  type: string
+                  example: "+7 900 000-00-00"
+      responses:
+        '201':
+          description: Успешная регистрация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id: { type: integer }
+                      name: { type: string }
+                      email: { type: string }
+                  profile:
+                    type: object
+                    properties:
+                      name: { type: string }
+                      email: { type: string }
+                      phone: { type: string }
+                      avatar: { type: string, nullable: true, description: URL }
+                      ads:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id: { type: integer }
+                            title: { type: string }
+                            price: { type: number, format: float }
+                      created_at: { type: string, format: date-time }
+                      updated_at: { type: string, format: date-time }
+                  access: { type: string }
+                  refresh: { type: string }
+  /api/auth/login/:
+    post:
+      summary: Вход пользователя
+      description: Возвращает токены и данные пользователя.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        '200':
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id: { type: integer }
+                      name: { type: string }
+                      email: { type: string }
+                  profile:
+                    type: object
+                    properties:
+                      name: { type: string }
+                      email: { type: string }
+                      phone: { type: string }
+                      avatar: { type: string, nullable: true, description: URL }
+                      ads:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id: { type: integer }
+                            title: { type: string }
+                            price: { type: number, format: float }
+                      created_at: { type: string, format: date-time }
+                      updated_at: { type: string, format: date-time }
+                  access: { type: string }
+                  refresh: { type: string }
+  /api/auth/refresh/:
+    post:
+      summary: Обновление access токена
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh]
+              properties:
+                refresh: { type: string }
+      responses:
+        '200':
+          description: Новый access токен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access: { type: string }
+  /api/auth/me/:
+    get:
+      summary: Текущий пользователь
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Профиль пользователя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: { type: string }
+                  email: { type: string }
+                  phone: { type: string }
+                  avatar: { type: string, nullable: true }
+                  ads:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: integer }
+                        title: { type: string }
+                        price: { type: number, format: float }
+                  created_at: { type: string, format: date-time }
+                  updated_at: { type: string, format: date-time }
+    patch:
+      summary: Обновление профиля
+      description: Обновляет name, phone и avatar. multipart/form-data для загрузки avatar.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                phone: { type: string }
+                avatar: { type: string, format: binary }
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                phone: { type: string }
+      responses:
+        '200':
+          description: Обновлённый профиль
+  /api/ads/:
+    get:
+      summary: Список объявлений
+      description: Возвращает активные объявления с пагинацией.
+      parameters:
+        - in: query
+          name: q
+          schema: { type: string }
+          description: Поиск по заголовку и описанию
+        - in: query
+          name: owner
+          schema: { type: integer }
+          description: ID владельца
+        - in: query
+          name: min_price
+          schema: { type: number }
+        - in: query
+          name: max_price
+          schema: { type: number }
+        - in: query
+          name: ordering
+          schema: { type: string, enum: [created_at, -created_at, price, -price] }
+          description: Поле сортировки
+        - in: query
+          name: page
+          schema: { type: integer }
+        - in: query
+          name: page_size
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Успех
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count: { type: integer }
+                  next: { type: string, nullable: true }
+                  previous: { type: string, nullable: true }
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: integer }
+                        title: { type: string }
+                        price: { type: number }
+                        image: { type: string, nullable: true }
+                        owner:
+                          type: object
+                          properties:
+                            id: { type: integer }
+                            name: { type: string }
+                            email: { type: string }
+                        created_at: { type: string, format: date-time }
+    post:
+      summary: Создать объявление
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [title, description, price]
+              properties:
+                title: { type: string }
+                description: { type: string }
+                price: { type: number }
+                image: { type: string, format: binary }
+                is_active: { type: boolean }
+          application/json:
+            schema:
+              type: object
+              required: [title, description, price]
+              properties:
+                title: { type: string }
+                description: { type: string }
+                price: { type: number }
+                is_active: { type: boolean }
+      responses:
+        '201':
+          description: Создано
+  /api/ads/{id}/:
+    get:
+      summary: Получить объявление
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Успех
+    patch:
+      summary: Частично обновить объявление
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                description: { type: string }
+                price: { type: number }
+                image: { type: string, format: binary }
+                is_active: { type: boolean }
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                description: { type: string }
+                price: { type: number }
+                is_active: { type: boolean }
+      responses:
+        '200':
+          description: Обновлено
+    put:
+      summary: Полностью обновить объявление
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, description, price, is_active]
+              properties:
+                title: { type: string }
+                description: { type: string }
+                price: { type: number }
+                is_active: { type: boolean }
+      responses:
+        '200':
+          description: Обновлено
+    delete:
+      summary: Удалить объявление
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '204':
+          description: Удалено
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
