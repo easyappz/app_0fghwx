@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ant-design/icons": "^6.0.0",
     "@tanstack/react-query": "^5.83.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -20,8 +19,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "tailwindcss -c ./tailwind.config.js -i ./src/tailwind.css -o ./src/tw.css --watch & react-scripts start",
-    "build": "tailwindcss -c ./tailwind.config.js -i ./src/tailwind.css -o ./src/tw.css && GENERATE_SOURCEMAP=true react-scripts build --no-minify",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

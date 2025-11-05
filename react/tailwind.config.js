@@ -1,6 +1,6 @@
 module.exports = {
-  // Correct content globs for CRA: scan src and public
-  content: ['./src/**/*.{js,jsx}', './public/index.html'],
+  // Correct content globs for CRA
+  content: ['./public/index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       colors: {
