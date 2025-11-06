@@ -11,7 +11,7 @@ const Home = () => {
             Привет, Мир!
           </h1>
           <p data-easytag="id5-react/src/pages/Home.jsx" className="text-lg text-muted mb-8">
-            Ищите, создавайте и управляйте объявлениями в минималистичном и удобном интерфейсе.
+            Это самый красивый сайт
           </p>
           <Link data-easytag="id6-react/src/pages/Home.jsx" to="/ads" aria-label="Перейти к объявлениям">
             <Button data-easytag="id7-react/src/pages/Home.jsx" className="px-6 py-3 text-base">Перейти к объявлениям</Button>
