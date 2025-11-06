@@ -8,7 +8,7 @@ const Home = () => {
       <div data-easytag="id2-react/src/pages/Home.jsx" className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         <div data-easytag="id3-react/src/pages/Home.jsx" className="text-center">
           <h1 data-easytag="id4-react/src/pages/Home.jsx" className="text-4xl sm:text-5xl font-semibold tracking-tight mb-4">
-            Доска объявлений нового уровня
+            Привет, Мир!
           </h1>
           <p data-easytag="id5-react/src/pages/Home.jsx" className="text-lg text-muted mb-8">
             Ищите, создавайте и управляйте объявлениями в минималистичном и удобном интерфейсе.
