@@ -4,11 +4,11 @@ import Button from '../components/ui/Button';
 
 const Home = () => {
   return (
-    <section data-easytag="id1-react/src/pages/Home.jsx" className="relative">
+    <section data-easytag="id5-react/src/pages/Home.jsx" className="relative">
       <div data-easytag="id2-react/src/pages/Home.jsx" className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         <div data-easytag="id3-react/src/pages/Home.jsx" className="text-center">
-          <h1 data-easytag="id4-react/src/pages/Home.jsx" className="text-4xl sm:text-5xl font-semibold tracking-tight mb-4">
-            Привет, Мир!
+          <h1 data-easytag="id5-react/src/pages/Home.jsx" className="text-4xl sm:text-5xl font-semibold tracking-tight mb-4">
+            Прикольный сайт
           </h1>
           <p data-easytag="id5-react/src/pages/Home.jsx" className="text-lg text-muted mb-8">
             Это самый красивый сайт
